@@ -1,15 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
+	"github.com/coreos/pkg/flagutil"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
-
-	"github.com/coreos/pkg/flagutil"
 )
 
 func main() {
@@ -29,6 +28,10 @@ func main() {
 	token := oauth1.NewToken(*accessToken, *accessSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
 
+	db := getConnection()
+	defer db.Close()
+	migrate(db)
+
 	client := twitter.NewClient(httpClient)
 
 	params := &twitter.StreamFilterParams{
@@ -39,7 +42,19 @@ func main() {
 	demux := twitter.NewSwitchDemux()
 	demux.Tweet = func(tweet *twitter.Tweet) {
 		fmt.Println(tweet.Text)
-		client.Statuses.Retweet(tweet.ID, nil)
+		// client.Statuses.Retweet(tweet.ID, nil)
+		fmt.Println(tweet.ID)
+		fmt.Println(tweet.User.ID)
+		fmt.Println(tweet.User.FollowersCount)
+		user, _, err := client.Users.Show(&twitter.UserShowParams{
+			UserID: tweet.User.ID,
+		})
+		if err != nil {
+			panic(err.Error())
+		}
+		fmt.Println(user.Name)
+		fmt.Println(user.FollowersCount)
+		// user.Protected
 	}
 
 	for message := range stream.Messages {
