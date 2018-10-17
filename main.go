@@ -28,14 +28,14 @@ func main() {
 	token := oauth1.NewToken(*accessToken, *accessSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
 
-	db := getConnection()
-	defer db.Close()
-	migrate(db)
+	// db := getConnection()
+	// defer db.Close()
+	// migrate(db)
 
 	client := twitter.NewClient(httpClient)
 
 	params := &twitter.StreamFilterParams{
-		Track:         []string{"golang", "Golang"},
+		Track:         []string{"taiyou"},
 		StallWarnings: twitter.Bool(true),
 	}
 	stream, _ := client.Streams.Filter(params)
@@ -54,6 +54,18 @@ func main() {
 		}
 		fmt.Println(user.Name)
 		fmt.Println(user.FollowersCount)
+		tartgetUser, _, err := client.Followers.List(&twitter.FollowerListParams{
+			UserID: user.ID,
+		})
+		if err != nil {
+			panic(err.Error())
+		}
+		for _, _user := range tartgetUser.Users {
+			aaa, _, _ := client.Users.Show(&twitter.UserShowParams{
+				UserID: _user.ID,
+			})
+			fmt.Println(aaa.Name)
+		}
 		// user.Protected
 	}
 
