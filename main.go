@@ -35,7 +35,7 @@ func main() {
 	client := twitter.NewClient(httpClient)
 
 	params := &twitter.StreamFilterParams{
-		Track:         []string{"taiyou"},
+		Track:         []string{"Docker"},
 		StallWarnings: twitter.Bool(true),
 	}
 	stream, _ := client.Streams.Filter(params)
@@ -56,6 +56,7 @@ func main() {
 		fmt.Println(user.FollowersCount)
 		tartgetUser, _, err := client.Followers.List(&twitter.FollowerListParams{
 			UserID: user.ID,
+			Count: 100,
 		})
 		if err != nil {
 			panic(err.Error())
