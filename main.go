@@ -28,9 +28,9 @@ func main() {
 	token := oauth1.NewToken(*accessToken, *accessSecret)
 	httpClient := config.Client(oauth1.NoContext, token)
 
-	// db := getConnection()
-	// defer db.Close()
-	// migrate(db)
+	db := getConnection()
+	defer db.Close()
+	migrate(db)
 
 	client := twitter.NewClient(httpClient)
 
@@ -41,33 +41,31 @@ func main() {
 	stream, _ := client.Streams.Filter(params)
 	demux := twitter.NewSwitchDemux()
 	demux.Tweet = func(tweet *twitter.Tweet) {
-		fmt.Println(tweet.Text)
 		// client.Statuses.Retweet(tweet.ID, nil)
-		fmt.Println(tweet.ID)
-		fmt.Println(tweet.User.ID)
-		fmt.Println(tweet.User.FollowersCount)
 		user, _, err := client.Users.Show(&twitter.UserShowParams{
 			UserID: tweet.User.ID,
 		})
-		if err != nil {
-			panic(err.Error())
-		}
+		// if err != nil {
+		// 	panic(err.Error())
+		// }
 		fmt.Println(user.Name)
-		fmt.Println(user.FollowersCount)
-		tartgetUser, _, err := client.Followers.List(&twitter.FollowerListParams{
-			UserID: user.ID,
-			Count: 100,
+		targetUser := tweet.User.ID
+		followers, _, err := client.Followers.List(&twitter.FollowerListParams{
+			UserID: tweet.User.ID,
+			Count:  100,
 		})
 		if err != nil {
 			panic(err.Error())
 		}
-		for _, _user := range tartgetUser.Users {
-			aaa, _, _ := client.Users.Show(&twitter.UserShowParams{
-				UserID: _user.ID,
+		for _, follower := range followers.Users {
+			// aaa, _, _ := client.Users.Show(&twitter.UserShowParams{
+			// 	UserID: _user.ID,
+			// })
+			db.Create(TargetDetail{
+				UserID:   targetUser,
+				Follower: follower.ID,
 			})
-			fmt.Println(aaa.Name)
 		}
-		// user.Protected
 	}
 
 	for message := range stream.Messages {

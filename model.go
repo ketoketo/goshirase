@@ -6,13 +6,13 @@ import (
 )
 
 type Target struct {
-	UserID      string `gorm:"primary_key"`
-	FollowerNum int    `gorm:"not null"`
+	UserID      int64 `sql:"type:bigint(20)" gorm:"primary_key"`
+	FollowerNum int64 `gorm:"not null"`
 }
 
 type TargetDetail struct {
-	UserID   string `gorm:"primary_key"`
-	Follower string `gorm:"primary_key"`
+	UserID   int64 `sql:"type:bigint(20)" gorm:"primary_key"`
+	Follower int64 `sql:"type:bigint(20)" gorm:"primary_key"`
 }
 
 func getConnection() *gorm.DB {
