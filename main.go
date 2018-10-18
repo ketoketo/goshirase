@@ -35,7 +35,7 @@ func main() {
 	client := twitter.NewClient(httpClient)
 
 	params := &twitter.StreamFilterParams{
-		Track:         []string{"Docker"},
+		Track:         []string{"tetetetest"},
 		StallWarnings: twitter.Bool(true),
 	}
 	stream, _ := client.Streams.Filter(params)
@@ -58,13 +58,11 @@ func main() {
 			panic(err.Error())
 		}
 		for _, follower := range followers.Users {
-			// aaa, _, _ := client.Users.Show(&twitter.UserShowParams{
-			// 	UserID: _user.ID,
-			// })
-			db.Create(TargetDetail{
+			detail := TargetDetail{
 				UserID:   targetUser,
 				Follower: follower.ID,
-			})
+			}
+			db.Where(&detail).FirstOrCreate(&detail)
 		}
 	}
 
