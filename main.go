@@ -35,34 +35,29 @@ func main() {
 	client := twitter.NewClient(httpClient)
 
 	params := &twitter.StreamFilterParams{
-		Track:         []string{"tetetetest"},
+		Track:         []string{"@GoShirase test"},
 		StallWarnings: twitter.Bool(true),
 	}
 	stream, _ := client.Streams.Filter(params)
 	demux := twitter.NewSwitchDemux()
 	demux.Tweet = func(tweet *twitter.Tweet) {
-		// client.Statuses.Retweet(tweet.ID, nil)
-		user, _, err := client.Users.Show(&twitter.UserShowParams{
-			UserID: tweet.User.ID,
-		})
-		// if err != nil {
-		// 	panic(err.Error())
-		// }
-		fmt.Println(user.Name)
 		targetUser := tweet.User.ID
-		followers, _, err := client.Followers.List(&twitter.FollowerListParams{
-			UserID: tweet.User.ID,
-			Count:  100,
+		user, _, err := client.Users.Show(&twitter.UserShowParams{
+			UserID: targetUser,
 		})
 		if err != nil {
 			panic(err.Error())
 		}
-		for _, follower := range followers.Users {
-			detail := TargetDetail{
-				UserID:   targetUser,
-				Follower: follower.ID,
-			}
-			db.Where(&detail).FirstOrCreate(&detail)
+		fmt.Println(user.Name)
+		// 変数初期化
+		count := -1
+		db.Model(&Target{}).Where("user_id = ?", targetUser).Count(&count)
+		fmt.Println(count)
+		fmt.Println("@"+user.ScreenName+" you are not registered")
+		if count != 1 {
+			client.Statuses.Update("@"+user.ScreenName+" you are not registered", &twitter.StatusUpdateParams{
+				InReplyToStatusID: tweet.ID,
+			})
 		}
 	}
 

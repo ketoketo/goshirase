@@ -1,13 +1,15 @@
 package main
 
 import (
+	"time"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 type Target struct {
-	UserID      int64 `sql:"type:bigint(20)" gorm:"primary_key"`
-	FollowerNum int64 `gorm:"not null"`
+	UserID   int64 `sql:"type:bigint(20)" gorm:"primary_key"`
+	UpdateTime time.Time
 }
 
 type TargetDetail struct {
