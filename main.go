@@ -106,7 +106,10 @@ func main() {
 			} else {
 				buffer.WriteString("なし\r\n")
 			}
-			// db.Exec("Drop table " + user.ScreenName)
+			// データ入れ替え
+			db.Delete(TargetDetail{}, "user_id = ?", targetUser)
+			db.Exec("insert into target_details select * from " + user.ScreenName)
+			db.Exec("Drop table " + user.ScreenName)
 
 			client.Statuses.Update("@"+user.ScreenName+" "+buffer.String(), &twitter.StatusUpdateParams{
 				InReplyToStatusID: tweet.ID,
