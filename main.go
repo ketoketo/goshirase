@@ -84,7 +84,7 @@ func main() {
 				var result CompareResult
 				db.ScanRows(rows, &result)
 				tmp, _, _ := client.Users.Show(&twitter.UserShowParams{
-					UserID: result.follower,
+					UserID: result.Follower,
 				})
 				if result.NewOldFlag == 0 {
 					reduction = append(reduction, tmp.Name)

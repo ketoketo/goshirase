@@ -38,16 +38,16 @@ func replaceSelectSql(sql string, targetVal string, replaceVal string) string {
 var REPLACE1 = "###REPLACE###"
 
 var CompareNewOldSQL = `
-SELECT 0,a.follower FROM target_details a
+SELECT 0 as new_old_flag,a.follower as follower FROM target_details a
 LEFT JOIN ###REPLACE### b ON a.user_id=b.user_id and a.follower=b.follower
 where b.user_id is null
 UNION
-SELECT 1,b.follower FROM target_details a
+SELECT 1 as new_old_flag,b.follower as follower FROM target_details a
 RIGHT JOIN ###REPLACE### b ON a.user_id=b.user_id and a.follower=b.follower
 where a.user_id is null
 `
 
 type CompareResult struct {
 	NewOldFlag int
-	follower   int64
+	Follower   int64
 }
