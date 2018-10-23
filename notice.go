@@ -34,7 +34,7 @@ func notice(client *twitter.Client) {
 			FollowFlag:     0,
 			RegisteredTime: time.Now(),
 		}
-		if user.FollowersCount <= 100 {
+		if user.FollowersCount >= 100 {
 			db.Where(&notice).FirstOrCreate(&notice)
 		}
 	}
