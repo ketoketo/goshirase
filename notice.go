@@ -2,6 +2,9 @@ package main
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/dghubble/go-twitter/twitter"
@@ -13,7 +16,7 @@ func notice(client *twitter.Client) {
 	noticeMigrate(db)
 
 	params := &twitter.StreamFilterParams{
-		Track:         []string{"ミスコン"},
+		Track:         []string{"Docker"},
 		StallWarnings: twitter.Bool(true),
 	}
 	stream, _ := client.Streams.Filter(params)
@@ -40,7 +43,11 @@ func notice(client *twitter.Client) {
 		}
 	}
 
-	for message := range stream.Messages {
-		demux.Handle(message)
-	}
+	go demux.HandleChan(stream.Messages)
+
+	ch := make(chan os.Signal)
+	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
+	log.Println(<-ch)
+
+	stream.Stop()
 }
