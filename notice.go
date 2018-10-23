@@ -13,7 +13,7 @@ func notice(client *twitter.Client) {
 	noticeMigrate(db)
 
 	params := &twitter.StreamFilterParams{
-		Track:         []string{"Docker"},
+		Track:         []string{"ミスコン"},
 		StallWarnings: twitter.Bool(true),
 	}
 	stream, _ := client.Streams.Filter(params)
@@ -26,8 +26,9 @@ func notice(client *twitter.Client) {
 		if err != nil {
 			panic(err.Error())
 		}
-		// fmt.Printf("Follower count is %d.\r\n", user.FollowersCount)
 		log.Printf("Follower count is %d.", user.FollowersCount)
+		log.Println(user.Name)
+		log.Println(tweet.Text)
 		notice := &Notice{
 			UserID:         targetUser,
 			FollowCount:    user.FollowersCount,
