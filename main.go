@@ -29,5 +29,6 @@ func main() {
 
 	client := twitter.NewClient(httpClient)
 
-	notice(client)
+	// notice(client)
+	registerFollower(client)
 }
