@@ -44,4 +44,5 @@ func goshirase(client *twitter.Client) {
 var messageTmplate = `前日の##UPTIME##に比べ、フォロワーが##FOL##人減少しています。
 
 フォローしていただければ、このお知らせをずっと受け取れます。
+#goshirase
 `
