@@ -10,7 +10,7 @@ import (
 	"github.com/dghubble/go-twitter/twitter"
 )
 
-func notice(client *twitter.Client) {
+func registerAll(client *twitter.Client) {
 	db := getConnection()
 	defer db.Close()
 	noticeMigrate(db)
