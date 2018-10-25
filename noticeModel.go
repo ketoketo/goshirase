@@ -16,3 +16,13 @@ type Notice struct {
 func noticeMigrate(db *gorm.DB) {
 	db.AutoMigrate(&Notice{})
 }
+
+var noticesDeleteTmplate = `
+DELETE FROM notices
+WHERE 
+	user_id IN (
+		SELECT user_id FROM (
+			SELECT user_id FROM notices WHERE follow_flag = 0 LIMIT ##COUNT##
+		) AS tmp
+	)
+`

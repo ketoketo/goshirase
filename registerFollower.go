@@ -39,10 +39,12 @@ func registerFollower(client *twitter.Client) {
 		} else {
 			log.Printf("%d is already registered.", followerId)
 			notice := Notice{
-				UserID:         followerId,
-				FollowFlag:     1,
+				UserID:     followerId,
+				FollowFlag: 1,
 			}
-			db.Model(&notice).Updates(Notice{FollowFlag: 1,})
+			db.Model(&notice).Updates(Notice{FollowFlag: 1})
 		}
 	}
+	// :TODO 上限値以上の場合フォロワー以外のユーザーを削除 DB
+	
 }

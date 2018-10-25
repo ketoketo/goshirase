@@ -31,5 +31,6 @@ func main() {
 
 	// registerAll(client)
 	// registerFollower(client)
-	goshirase(client)
+	// goshirase(client)
+	deleteNotices(client)
 }
