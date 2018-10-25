@@ -47,22 +47,29 @@ func compare(client *twitter.Client) {
 				Count:  500,
 			})
 			if err != nil {
-				panic(err.Error())
+				return
 			}
+			
 			for _, follower := range followers.Users {
 				db.Exec("insert into " + user.ScreenName + "(user_id,follower)values(" + strconv.FormatInt(targetUser, 10) + "," + strconv.FormatInt(follower.ID, 10) + ")")
 			}
 			fmt.Println(replaceSelectSql(CompareNewOldSQL, REPLACE1, user.ScreenName))
 			rows, err := db.Raw(replaceSelectSql(CompareNewOldSQL, REPLACE1, user.ScreenName)).Rows()
+			if err != nil {
+				panic(err.Error())
+			}
 
 			rise := []string{}
 			reduction := []string{}
 			for rows.Next() {
 				var result CompareResult
 				db.ScanRows(rows, &result)
-				tmp, _, _ := client.Users.Show(&twitter.UserShowParams{
+				tmp, _, err := client.Users.Show(&twitter.UserShowParams{
 					UserID: result.Follower,
 				})
+				if err != nil {
+					continue
+				}
 				if result.NewOldFlag == 0 {
 					reduction = append(reduction, tmp.Name)
 				} else {

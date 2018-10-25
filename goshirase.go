@@ -17,15 +17,16 @@ func goshirase(client *twitter.Client) {
 	notices := []Notice{}
 
 	// 1日経過している場合、対象
-	// db.Where("registered_time < (NOW() - INTERVAL 1 DAY)").Limit(900).Find(&notices)
-	db.Where("registered_time < NOW()").Limit(900).Find(&notices) // debug
+	db.Where("registered_time < (NOW() - INTERVAL 1 DAY)").Limit(900).Find(&notices)
+	// db.Where("registered_time < NOW()").Limit(900).Find(&notices) // debug
 
 	for _, notice := range notices {
 		user, _, err := client.Users.Show(&twitter.UserShowParams{
 			UserID: notice.UserID,
 		})
 		if err != nil {
-			panic(err.Error)
+			// ユーザーが削除されたということなのでcontinue
+			continue
 		}
 
 		log.Printf("before: %d, after: %d", notice.FollowCount, user.FollowersCount)

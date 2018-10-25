@@ -27,7 +27,7 @@ func registerAll(client *twitter.Client) {
 			UserID: targetUser,
 		})
 		if err != nil {
-			panic(err.Error())
+			return
 		}
 		log.Printf("Follower count is %d.", user.FollowersCount)
 		log.Println(user.Name)
