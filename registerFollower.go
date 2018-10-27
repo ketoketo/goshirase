@@ -45,6 +45,4 @@ func registerFollower(client *twitter.Client) {
 			db.Model(&notice).Updates(Notice{FollowFlag: 1})
 		}
 	}
-	// :TODO 上限値以上の場合フォロワー以外のユーザーを削除 DB
-	
 }
