@@ -16,7 +16,7 @@ func registerAll(client *twitter.Client) {
 	noticeMigrate(db)
 
 	params := &twitter.StreamFilterParams{
-		Track:         []string{"Docker"},
+		Track:         []string{"pokemon", "pokemongo", "クロちゃん", "モンスターハウス"},
 		StallWarnings: twitter.Bool(true),
 	}
 	stream, _ := client.Streams.Filter(params)
