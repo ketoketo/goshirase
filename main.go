@@ -29,6 +29,7 @@ func main() {
 
 	client := twitter.NewClient(httpClient)
 
+	// :TODO CLI化
 	// registerAll(client)
 	// registerFollower(client)
 	// goshirase(client)
