@@ -17,29 +17,29 @@ func registerFollower(client *twitter.Client) {
 		panic(err.Error)
 	}
 
-	for _, followerId := range followers.IDs {
+	for _, followerID := range followers.IDs {
 		count := 0
-		db.Model(&Notice{}).Where("user_id = ?", followerId).Count(&count)
+		db.Model(&Notice{}).Where("user_id = ?", followerID).Count(&count)
 		// フォロワーを登録
 		if count == 0 {
 			user, _, err := client.Users.Show(&twitter.UserShowParams{
-				UserID: followerId,
+				UserID: followerID,
 			})
 			if err != nil {
 				return
 			}
 			log.Printf("Follower count is %d.", user.FollowersCount)
 			notice := &Notice{
-				UserID:         followerId,
+				UserID:         followerID,
 				FollowCount:    user.FollowersCount,
 				FollowFlag:     1,
 				RegisteredTime: time.Now(),
 			}
 			db.Create(&notice)
 		} else {
-			log.Printf("%d is already registered.", followerId)
+			log.Printf("%d is already registered.", followerID)
 			notice := Notice{
-				UserID:     followerId,
+				UserID:     followerID,
 				FollowFlag: 1,
 			}
 			db.Model(&notice).Updates(Notice{FollowFlag: 1})
