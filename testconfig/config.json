@@ -1,0 +1,6 @@
+{
+    "TWITTER_CONSUMER_KEY": "param1",
+    "TWITTER_CONSUMER_SECRET": "param2",
+    "TWITTER_ACCESS_TOKEN": "param3",
+    "TWITTER_ACCESS_SECRET": "param4"
+}
