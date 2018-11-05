@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 )
 
@@ -29,8 +30,8 @@ func Test_mkConfigFile(t *testing.T) {
 		wantName string
 		wantErr  bool
 	}{
-		{"test1", args{"config"}, ".goshirase/config", false},
-		{"test2", args{"config2"}, ".goshirase/config2", false},
+		{"test1", args{"config3"}, ".goshirase/config3", false},
+		{"test2", args{"config4"}, ".goshirase/config4", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -39,9 +40,13 @@ func Test_mkConfigFile(t *testing.T) {
 				t.Errorf("mkConfigFile() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+			if _, err := os.Stat(got); os.IsNotExist(err) {
+				t.Errorf("mkConfigFile() error not exist : %v", got)
+			}
 			if got != tt.wantName {
 				t.Errorf("mkConfigFile() = %v, wantName %v", got, tt.wantName)
 			}
 		})
+		os.Remove(tt.wantName)
 	}
 }
