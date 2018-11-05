@@ -14,6 +14,6 @@ func mkConfigDir() {
 
 func mkConfigFile(fileName string) (string, error) {
 	result := CONF_DIR + "/" + fileName
-	_, err := os.Create(fileName)
+	_, err := os.Create(result)
 	return result, err
 }
