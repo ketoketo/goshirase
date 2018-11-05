@@ -7,10 +7,10 @@ import (
 )
 
 type Config struct {
-	ConsumerKey    string `json:"TWITTER_CONSUMER_KEY"`
-	ConsumerSecret string `json:"TWITTER_CONSUMER_SECRET"`
-	AccessToken    string `json:"TWITTER_ACCESS_TOKEN"`
-	AccessSecret   string `json:"TWITTER_ACCESS_SECRET"`
+	consumerKey    string `json:"TWITTER_CONSUMER_KEY"`
+	consumerSecret string `json:"TWITTER_CONSUMER_SECRET"`
+	accessToken    string `json:"TWITTER_ACCESS_TOKEN"`
+	accessSecret   string `json:"TWITTER_ACCESS_SECRET"`
 }
 
 func parse(filePath string) (Config, error) {
