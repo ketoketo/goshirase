@@ -36,7 +36,9 @@ func main() {
 	httpClient := config.Client(oauth1.NoContext, token)
 
 	client := twitter.NewClient(httpClient)
-	fmt.Print(client)
+	fmt.Println(client)
+
+	registerConfig("CONFIG_TEST")
 
 	// :TODO CLI化
 	// registerAll(client)
