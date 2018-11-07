@@ -16,6 +16,19 @@ type Config struct {
 	AccessSecret   string `json:"TWITTER_ACCESS_SECRET"`
 }
 
+const CONF_DIR string = ".goshirase"
+
+func mkConfigDir() {
+	if _, err := os.Stat(CONF_DIR); os.IsNotExist(err) {
+		os.Mkdir(CONF_DIR, 0744)
+	}
+}
+
+func mkConfigFile(fileName string) (string, error) {
+	_, err := os.Create(fileName)
+	return fileName, err
+}
+
 func parse(filePath string) (*Config, error) {
 	bytes, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -48,12 +61,15 @@ func stdReader(stdin io.Reader, message string, param string) string {
 	return scanner.Text()
 }
 
-func registerConfig(path string) error {
-	// var config *Config
+func registerConfig(file string) error {
+	// configDir作成
+	mkConfigDir()
+
 	config := &Config{}
 	// ファイルが存在する場合、parse
-	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		config, err = parse(path)
+	filePath := CONF_DIR + "/" + file
+	if _, err := os.Stat(filePath); !os.IsNotExist(err) {
+		config, err = parse(filePath)
 		if err != nil {
 			return err
 		}
@@ -80,6 +96,6 @@ func registerConfig(path string) error {
 	if err != nil {
 		return err
 	}
-	writeConfig(path, data)
+	writeConfig(filePath, data)
 	return nil
 }
