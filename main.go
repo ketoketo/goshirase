@@ -77,3 +77,8 @@ func main() {
 	// goshirase(client)
 	// deleteNotices(client, 1)
 }
+
+func selectConfigure() {
+	env := envParse()
+	println(env)
+}
