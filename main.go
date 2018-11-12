@@ -5,6 +5,8 @@ import (
 	"os"
 	"sort"
 
+	"github.com/dghubble/go-twitter/twitter"
+	"github.com/dghubble/oauth1"
 	"github.com/urfave/cli"
 )
 
@@ -36,10 +38,12 @@ func main() {
 			},
 		},
 		{
-			Name:    "add",
-			Aliases: []string{"g"},
-			Usage:   "add a task to the list",
+			Name:    "registerall",
+			Aliases: []string{"ra"},
+			Usage:   "register all acounts",
 			Action: func(c *cli.Context) error {
+				client := createTwitterClient(configName)
+				registerAll(client)
 				return nil
 			},
 		},
@@ -52,25 +56,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// flags := flag.NewFlagSet("user-auth", flag.ExitOnError)
-	// consumerKey := flags.String("consumer-key", "", "Twitter Consumer Key")
-	// consumerSecret := flags.String("consumer-secret", "", "Twitter Consumer Secret")
-	// accessToken := flags.String("access-token", "", "Twitter Access Token")
-	// accessSecret := flags.String("access-secret", "", "Twitter Access Secret")
-	// flags.Parse(os.Args[1:])
-	// flagutil.SetFlagsFromEnv(flags, "TWITTER")
-
-	// if *consumerKey == "" || *consumerSecret == "" || *accessToken == "" || *accessSecret == "" {
-	// 	log.Fatal("Consumer key/secret and Access token/secret required")
-	// }
-
-	// config := oauth1.NewConfig(*consumerKey, *consumerSecret)
-	// token := oauth1.NewToken(*accessToken, *accessSecret)
-	// httpClient := config.Client(oauth1.NoContext, token)
-
-	// client := twitter.NewClient(httpClient)
-	// fmt.Println(client)
-
 	// :TODO CLI化
 	// registerAll(client)
 	// registerFollower(client)
@@ -78,7 +63,21 @@ func main() {
 	// deleteNotices(client, 1)
 }
 
-func selectConfigure() {
+func createTwitterClient(configName string) *twitter.Client {
 	env := envParse()
-	println(env)
+	// envに設定されていない場合、configファイルから取得する
+	if env != nil {
+		var err error
+		env, err = parse(configName)
+		if err != nil {
+			log.Fatal(err)
+			panic(err.Error)
+		}
+	}
+
+	config := oauth1.NewConfig(env.ConsumerKey, env.ConsumerSecret)
+	token := oauth1.NewToken(env.AccessToken, env.AccessSecret)
+	httpClient := config.Client(oauth1.NoContext, token)
+	client := twitter.NewClient(httpClient)
+	return client
 }
