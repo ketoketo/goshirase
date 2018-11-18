@@ -17,7 +17,7 @@ func envParse() *Config {
 	flagutil.SetFlagsFromEnv(flags, "TWITTER")
 
 	if *consumerKey == "" || *consumerSecret == "" || *accessToken == "" || *accessSecret == "" {
-		log.Fatal("no env")
+		log.Println("no env")
 		return nil
 	}
 

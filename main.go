@@ -21,7 +21,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "profile, p",
-			Value:       "config",
+			Value:       ".goshirase/config",
 			Usage:       "config file name",
 			Destination: &configName,
 		},
@@ -38,12 +38,42 @@ func main() {
 			},
 		},
 		{
+			Name:    "registerFollower",
+			Aliases: []string{"rf"},
+			Usage:   "register follower acounts",
+			Action: func(c *cli.Context) error {
+				client := createTwitterClient(configName)
+				registerFollower(client)
+				return nil
+			},
+		},
+		{
 			Name:    "registerall",
 			Aliases: []string{"ra"},
 			Usage:   "register all acounts",
 			Action: func(c *cli.Context) error {
 				client := createTwitterClient(configName)
 				registerAll(client)
+				return nil
+			},
+		},
+		{
+			Name:    "delete",
+			Aliases: []string{"d"},
+			Usage:   "delete upper acounts",
+			Action: func(c *cli.Context) error {
+				client := createTwitterClient(configName)
+				deleteNotices(client, 900)
+				return nil
+			},
+		},
+		{
+			Name:    "goshirase",
+			Aliases: []string{"g"},
+			Usage:   "start goshirase",
+			Action: func(c *cli.Context) error {
+				client := createTwitterClient(configName)
+				goshirase(client)
 				return nil
 			},
 		},
@@ -66,6 +96,7 @@ func main() {
 func createTwitterClient(configName string) *twitter.Client {
 	env := envParse()
 	// envに設定されていない場合、configファイルから取得する
+	log.Println(configName)
 	if env == nil {
 		var err error
 		env, err = parse(configName)
