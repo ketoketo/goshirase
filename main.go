@@ -66,7 +66,7 @@ func main() {
 func createTwitterClient(configName string) *twitter.Client {
 	env := envParse()
 	// envに設定されていない場合、configファイルから取得する
-	if env != nil {
+	if env == nil {
 		var err error
 		env, err = parse(configName)
 		if err != nil {
