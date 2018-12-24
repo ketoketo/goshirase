@@ -1,14 +1,7 @@
-FROM golang:1.11.1
+FROM alpine:latest
 
-MAINTAINER tMatSuZ
+WORKDIR /app
 
-ADD main.go /go/src/github.com/tMatSuZ/goshirase/
+COPY goshirase /app/goshirase
 
-RUN go get github.com/dghubble/go-twitter/twitter
-RUN go get github.com/dghubble/oauth1
-RUN go get github.com/coreos/pkg/flagutil
-RUN go get github.com/jinzhu/gorm
-RUN go get github.com/go-sql-driver/mysql
-RUN go install github.com/tMatSuZ/goshirase
-
-ENTRYPOINT /go/bin/goshirase
+ENTRYPOINT ["/app/goshirase"]
